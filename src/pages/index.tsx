@@ -79,9 +79,16 @@ const Homepage = () => {
           <div className="flex flex-col justify-center space-y-10 py-6">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-6">
-                <div>
-                  <div>ChardieCode &#x2022; April 16, 2023</div>
-                  <div>Father, Founder, teacher and software developer</div>
+                <div className="flex">
+                  <div className="h-8 w-8 rounded-full bg-gray-500"></div>
+                  <div className="ml-2">
+                    <p className="text-xs font-semibold">
+                      ChardieCode &#x2022; April 16, 2023
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Father, Founder, teacher and software developer
+                    </p>
+                  </div>
                 </div>
                 <div className="group grid min-h-[6rem] w-full grid-cols-12 gap-3">
                   <div className="col-span-8">
@@ -89,7 +96,7 @@ const Homepage = () => {
                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
                       Iusto molestias eligendi
                     </p>
-                    <p className="pt-3 text-xs text-gray-600">
+                    <p className="pt-3 text-xs text-gray-800">
                       Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                       Necessitatibus dolorem mollitia hic ducimus autem
                       temporibus qui veniam. Unde facilis dicta alias
