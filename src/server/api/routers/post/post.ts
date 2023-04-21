@@ -1,0 +1,31 @@
+import { z } from "zod";
+import slugify from "slugify";
+import { writeFormSchema } from "~/components/Forms/WriteFormModal";
+
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
+
+export const postRouter = createTRPCRouter({
+  createPost: protectedProcedure.input(
+    writeFormSchema
+  ).mutation(
+    async ({ ctx:{prisma, session}, input: { title, description, text } }) => {
+      // Check slug exists
+      await prisma.post.create({
+        data: {
+          title,
+          description,
+          text,
+          slug: slugify(title),
+          author: {
+            connect: {
+              id: session.user.id
+            }
+          }
+        }
+      })
+    }
+  ),
+});

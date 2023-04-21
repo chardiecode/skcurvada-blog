@@ -4,19 +4,19 @@ import WriteModal from "../common/WriteModal";
 import { GlobalContext } from "~/contexts/GlobalContextProvider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { title } from "process";
+import { api } from "~/utils/api";
 
 type WriteFormType = {
   title: string;
   description: string;
-  body: string;
+  text: string;
 };
 
 // Zod schema
-const writeFormSchema = z.object({
+export const writeFormSchema = z.object({
   title: z.string().min(20),
   description: z.string().min(60),
-  body: z.string().min(100),
+  text: z.string().min(100),
 });
 
 const WriteFormModal = () => {
@@ -30,7 +30,16 @@ const WriteFormModal = () => {
     resolver: zodResolver(writeFormSchema),
   });
 
-  const onsubmit = (data: WriteFormType) => console.log(data);
+  const createPost = api.post.createPost.useMutation({
+    onSuccess(data, variables, context) {
+      console.log(data, 'Post successfully created');
+    },
+  })
+
+  const onsubmit = (data: WriteFormType) => {
+    createPost.mutate(data)
+  }
+
   return (
     <>
       <WriteModal
@@ -68,10 +77,10 @@ const WriteFormModal = () => {
           </div>
           <div className="flex w-full flex-col">
             <div className="mb-1 flex w-full justify-start space-y-1 text-xs text-red-700">
-              {errors.body?.message}
+              {errors.text?.message}
             </div>
             <textarea
-              {...register("body")}
+              {...register("text")}
               id="mainBody"
               placeholder="Content goes here..."
               className="h-full w-full rounded-md border border-gray-300 p-3 text-sm outline-none focus:border-gray-600"
