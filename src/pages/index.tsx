@@ -1,9 +1,14 @@
+import dayjs from "dayjs";
 import { CiSearch } from "react-icons/ci";
 import { HiChevronDown } from "react-icons/hi";
 import WriteFormModal from "~/components/Forms/WriteFormModal";
 import MainLayout from "~/layouts/MainLayout";
+import BlogList from "~/components/common/BlogList";
+import Image from "next/image";
+import { api } from "~/utils/api";
 
 const Homepage = () => {
+  const getPosts = api.post.getPosts.useQuery();
   return (
     <div className="flex h-screen w-full flex-col">
       <MainLayout>
@@ -55,55 +60,12 @@ const Homepage = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center space-y-10 py-6">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex flex-col space-y-6">
-                  <div className="flex">
-                    <div className="h-8 w-8 rounded-full bg-gray-500"></div>
-                    <div className="ml-2">
-                      <p className="text-xs">
-                        <span className="font-semibold">Aya Poarch</span>{" "}
-                        &#x2022;{" "}
-                        <span className="text-gray-500">April 16, 2023</span>
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Father, Founder, teacher and software developer
-                      </p>
-                    </div>
-                  </div>
-                  <div className="group grid min-h-[6rem] w-full grid-cols-12 gap-3">
-                    <div className="col-span-8">
-                      <p className="text-2sm font-bold group-hover:underline">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Iusto molestias eligendi
-                      </p>
-                      <p className="pt-3 text-xs text-gray-600">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing
-                        elit. Necessitatibus dolorem mollitia hic ducimus autem
-                        temporibus qui veniam. Unde facilis dicta alias
-                        voluptatibus tenetur exercitationem nisi, nesciunt,
-                        consequatur officiis dolor quisquam.
-                      </p>
-                    </div>
-                    {/* Image */}
-                    <div className="col-span-4">
-                      <div className="h-full w-full transform rounded-xl bg-gray-300 transition duration-300 hover:scale-105 hover:shadow-xl"></div>
-                    </div>
-                  </div>
-                  <div className="relative flex w-full items-center space-x-4 border-b border-gray-300 pb-8">
-                    <div className="text-xs">My topics</div>
-                    <div className="flex items-center space-x-2">
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <div
-                          className="rounded-2xl bg-gray-200 px-4 py-2 text-xs"
-                          key={i}
-                        >
-                          tag{i}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
+              {/* TODO: Replace skeleton loader */}
+              {getPosts.isLoading && <div>Loading..............</div>}
+              {getPosts.isSuccess &&
+                getPosts.data?.map((post, i) => (
+                  <BlogList post={post} key={i} />
+                ))}
             </div>
           </main>
           <aside className="col-span-4 flex flex-col space-y-4 p-8">

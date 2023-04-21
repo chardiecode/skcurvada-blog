@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { z } from "zod";
-import WriteModal from "../common/WriteModal";
-import { GlobalContext } from "~/contexts/GlobalContextProvider";
 import { useForm } from "react-hook-form";
+import { GlobalContext } from "~/contexts/GlobalContextProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-hot-toast";
+
+import WriteModal from "../common/WriteModal";
 import { api } from "~/utils/api";
 
 type WriteFormType = {
@@ -24,21 +26,31 @@ const WriteFormModal = () => {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<WriteFormType>({
     resolver: zodResolver(writeFormSchema),
   });
 
+  const postRoute = api.useContext().post;
+
   const createPost = api.post.createPost.useMutation({
-    onSuccess(data, variables, context) {
-      console.log(data, 'Post successfully created');
+    onError() {
+      toast.error("Something went wrong. Please try again later");
     },
-  })
+    onSuccess() {
+      toast.success("Post created successfully");
+      setIsWriteModalOpen(false);
+      reset();
+      postRoute.getPosts.invalidate(); // Refetch posts
+    },
+  });
 
   const onsubmit = (data: WriteFormType) => {
-    createPost.mutate(data)
-  }
+    createPost.mutate(data);
+  };
 
   return (
     <>
