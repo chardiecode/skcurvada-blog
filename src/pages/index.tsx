@@ -167,7 +167,7 @@ const Homepage = () => {
               </div>
             </div>
           </aside>
-          <footer>This is a footer section</footer>
+          {/* <footer>This is a footer section</footer> */}
         </section>
       </MainLayout>
       <WriteFormModal />
