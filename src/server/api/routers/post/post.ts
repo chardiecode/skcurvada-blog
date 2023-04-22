@@ -1,12 +1,11 @@
-import { z } from "zod";
 import slugify from "slugify";
-import { writeFormSchema } from "~/components/Forms/WriteFormModal";
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { writeFormSchema } from "~/validation/formValidation";
 
 export const postRouter = createTRPCRouter({
   createPost: protectedProcedure

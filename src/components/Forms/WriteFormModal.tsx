@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { GlobalContext } from "~/contexts/GlobalContextProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 
 import WriteModal from "../common/WriteModal";
+import { writeFormSchema } from "~/validation/formValidation";
 import { api } from "~/utils/api";
 
 type WriteFormType = {
@@ -14,19 +14,11 @@ type WriteFormType = {
   text: string;
 };
 
-// Zod schema
-export const writeFormSchema = z.object({
-  title: z.string().min(20),
-  description: z.string().min(60),
-  text: z.string().min(100),
-});
-
 const WriteFormModal = () => {
   const { isWriteModalOpen, setIsWriteModalOpen } = useContext(GlobalContext);
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -34,7 +26,7 @@ const WriteFormModal = () => {
     resolver: zodResolver(writeFormSchema),
   });
 
-  const postRoute = api.useContext().post;
+  // const postRoute = api.useContext().post;
 
   const createPost = api.post.createPost.useMutation({
     onError() {
@@ -44,7 +36,7 @@ const WriteFormModal = () => {
       toast.success("Post created successfully");
       setIsWriteModalOpen(false);
       reset();
-      postRoute.getPosts.invalidate(); // Refetch posts
+      // postRoute.getPosts.invalidate(); // Refetch posts
     },
   });
 

@@ -19,13 +19,13 @@ interface BlogProps {
   post: PostProps;
 }
 
-const BlogList = ({ post }: BlogProps) => {
+const Blog: React.FC<BlogProps> = ({ post }) => {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex">
         <div className="relative h-8 w-8 rounded-full bg-gray-500">
           <Image
-            src={post.author.image!}
+            src={post.author.image || ""}
             alt="Profile image"
             fill
             className="rounded-full"
@@ -69,4 +69,4 @@ const BlogList = ({ post }: BlogProps) => {
   );
 };
 
-export default BlogList;
+export default Blog;

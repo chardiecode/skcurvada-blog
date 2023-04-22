@@ -5,7 +5,7 @@ type InputTypes = {
   placeholder: string;
 };
 
-const Input = ({ id, placeholder }: InputTypes) => {
+const Input: React.FC<InputTypes> = ({ id, placeholder }) => {
   return (
     <>
       <input

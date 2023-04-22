@@ -41,11 +41,7 @@ const Header = () => {
           </div>
 
           <button
-            onClick={
-              // confirmation
-              // () => setIsOpen(true)
-              () => signOut()
-            }
+            onClick={() => void signOut()}
             className="flex items-center space-x-3 rounded border border-gray-200 px-4 py-1 transition hover:border-gray-900 hover:text-gray-900"
           >
             <div className="text-sm">Logout</div>
@@ -54,7 +50,7 @@ const Header = () => {
         </div>
       ) : (
         <button
-          onClick={() => signIn()}
+          onClick={() => void signIn()}
           className="flex items-center space-x-3 rounded border border-gray-200 px-4 py-1 transition hover:border-gray-900 hover:text-gray-900"
         >
           Signin
