@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { BsChat } from "react-icons/bs";
@@ -6,7 +7,6 @@ import Image from "next/image";
 
 import MainLayout from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
-import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 const BlogPage = () => {
@@ -19,15 +19,32 @@ const BlogPage = () => {
       enabled: !!router.query.slug, // Only get the post when slug is defined
     }
   );
-  const authorImage = getPost.data?.author.image;
+  const postRoute = api.useContext().post;
+
+  const invalidateCurrentPostPage = useCallback(() => {
+    postRoute.getPost.invalidate({ slug: router.query.slug as string });
+  }, [postRoute.getPost, router.query.slug]);
+
   const likePost = api.post.likePost.useMutation({
     onError() {
       toast.error("Something went wrong. Please try again later");
     },
     onSuccess: () => {
       toast.success("Post liked!");
+      invalidateCurrentPostPage();
     },
   });
+
+  const dislikePost = api.post.disLikePost.useMutation({
+    onSuccess: () => {
+      invalidateCurrentPostPage();
+    },
+    onError() {
+      toast.error("Something went wrong. Please try again later");
+    },
+  });
+
+  const authorImage = getPost.data?.author.image;
 
   return (
     <MainLayout>
@@ -68,9 +85,9 @@ const BlogPage = () => {
           </div>
           {getPost.isSuccess && (
             <div className="flex w-full">
-              <div className="flex items-center justify-center gap-4 rounded-lg bg-white p-2">
-                <div className="flex h-full cursor-pointer ">
-                  {!getPost.data?.likes ? (
+              <div className="flex items-center justify-center rounded-lg bg-white">
+                <div className="mr-4 flex h-full cursor-pointer">
+                  {!getPost.data?.likes.length ? (
                     <FcLikePlaceholder
                       onClick={() =>
                         likePost.mutate({
@@ -82,10 +99,9 @@ const BlogPage = () => {
                   ) : (
                     <FcLike
                       onClick={() =>
-                        // likePost.mutate({
-                        //   postId: getPost.data?.id!,
-                        // })
-                        toast.success("You already liked the post")
+                        dislikePost.mutate({
+                          postId: getPost.data?.id!,
+                        })
                       }
                       className="text-3xl"
                     />
