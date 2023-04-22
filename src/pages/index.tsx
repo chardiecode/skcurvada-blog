@@ -1,4 +1,3 @@
-import WriteFormModal from "~/components/Forms/WriteFormModal";
 import MainLayout from "~/layouts/MainLayout";
 import Aside from "~/layouts/MainLayout/Aside";
 import Main from "~/layouts/MainLayout/Main";
@@ -12,7 +11,6 @@ const Homepage = () => {
           <Aside />
         </section>
       </MainLayout>
-      <WriteFormModal />
     </div>
   );
 };

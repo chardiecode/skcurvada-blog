@@ -1,4 +1,5 @@
 import slugify from "slugify";
+import { z } from "zod";
 
 import {
   createTRPCRouter,
@@ -33,7 +34,7 @@ export const postRouter = createTRPCRouter({
     ),
   getPosts: publicProcedure.query(async ({ ctx: { prisma } }) => {
     const posts = await prisma.post.findMany({
-      take: 5,
+      take: 15,
       orderBy: [
         {
           createdAt: "desc",
@@ -50,4 +51,26 @@ export const postRouter = createTRPCRouter({
     });
     return posts;
   }),
+  getPost: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .query(async ({ ctx: { prisma }, input: { slug } }) => {
+      const post = await prisma.post.findUnique({
+        where: {
+          slug,
+        },
+        include: {
+          author: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      });
+      return post;
+    }),
 });

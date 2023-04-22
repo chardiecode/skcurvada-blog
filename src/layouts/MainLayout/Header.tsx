@@ -6,27 +6,28 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { HiLogout } from "react-icons/hi";
 // import ResuableDialog from "~/components/common/ConfirmationModal";
 import { GlobalContext } from "~/contexts/GlobalContextProvider";
+import Link from "next/link";
 
 const Header = () => {
   const { status } = useSession();
 
-  const { setIsWriteModalOpen } = useContext(GlobalContext);
-
+  const { setIsWriteModalOpen, isWriteModalOpen } = useContext(GlobalContext);
+  console.log(isWriteModalOpen);
   return (
     <header className="border-gray-380 flex h-16 w-full flex-row items-center justify-around border-b bg-white py-8">
       <div>
         <IoReorderThreeOutline className="text-3xl text-gray-600" />
       </div>
-      <div className="text-xl font-extrabold">Sk Curvada</div>
+      <Link className="text-xl font-extrabold" href={"/"}>
+        Sk Curvada
+      </Link>
       {status === "authenticated" ? (
         <div className="flex items-center space-x-4">
           <div>
             <BsBell className="text-xl text-gray-600" />
           </div>
           <div>
-            <div className="h-6 w-6 rounded-full bg-gray-600">
-              {/* <img src={sessionData?.user?.image!} /> */}
-            </div>
+            <div className="h-6 w-6 rounded-full bg-gray-600"></div>
           </div>
           <div>
             <button

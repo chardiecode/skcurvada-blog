@@ -1,32 +1,76 @@
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React from "react";
+import { BsChat } from "react-icons/bs";
+import { FcLike } from "react-icons/fc";
+import Image from "next/image";
+
 import MainLayout from "~/layouts/MainLayout";
+import { api } from "~/utils/api";
 
 const BlogPage = () => {
   const router = useRouter();
-  console.log(router);
+  const getPost = api.post.getPost.useQuery(
+    {
+      slug: router.query.slug as string,
+    },
+    {
+      enabled: !!router.query.slug, // Only get the post when slug is defined
+    }
+  );
+  const authorImage = getPost.data?.author.image;
   return (
     <MainLayout>
       <div className="flex h-full w-full flex-col items-center p-10">
-        <div className="align-m w-full max-w-screen-lg flex-col space-y-6">
-          <div className="h-[60vh] w-full rounded-lg bg-gray-300 shadow-lg">
-            featuted image
+        <div className="w-full max-w-screen-md flex-col space-y-4">
+          {getPost.isLoading && <div>Loading...</div>}
+
+          <div className="relative h-[40vh] w-full rounded-lg bg-gray-300 shadow-lg">
+            <div className="absolute bottom-4 left-4 flex w-full items-center">
+              {getPost.data?.title}
+            </div>
           </div>
+          <div className="flex pt-3">
+            <div className="relative h-8 w-8 rounded-full bg-gray-500">
+              {authorImage && (
+                <Image
+                  src={authorImage}
+                  alt="Profile image"
+                  fill
+                  className="rounded-full"
+                />
+              )}
+            </div>
+            <div className="ml-2">
+              <p className="text-xs">
+                <span className="font-semibold">
+                  {getPost.data?.author.name}
+                </span>{" "}
+                &#x2022;{" "}
+                <span className="text-gray-500">
+                  {dayjs(getPost.data?.createdAt).format("MMM D, YYYY h:mm A")}
+                </span>
+              </p>
+              <p className="text-xs text-gray-500">
+                Father, Founder, teacher and software developer
+              </p>
+            </div>
+          </div>
+          {getPost.isSuccess && (
+            <div className="flex w-full">
+              <div className="flex gap-4 rounded-lg bg-white p-2">
+                <div className="cursor-pointer">
+                  <FcLike className="text-xl" />
+                </div>
+                <div className="cursor-pointer">
+                  <BsChat className="text-xl" />
+                </div>
+              </div>
+            </div>
+          )}
           <div className="border-l-4 border-gray-700 pl-6">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur
-            nulla iste, dolores nostrum dolor ab perspiciatis id numquam hic at
-            dolorum deserunt quae neque beatae autem? Excepturi magni odit quam.
+            {getPost.data?.description}
           </div>
-          <div>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident
-            molestiae incidunt sapiente vitae natus repudiandae, magni totam
-            distinctio enim amet numquam, delectus dolor velit fuga, non id eius
-            corrupti necessitatibus? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Tempore amet laudantium molestiae natus explicabo
-            voluptatem impedit odit harum, accusantium necessitatibus laboriosam
-            velit atque adipisci ducimus consectetur quibusdam et excepturi
-            nesciunt.
-          </div>
+          <div>{getPost.data?.text}</div>
         </div>
       </div>
     </MainLayout>
