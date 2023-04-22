@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { BsChat } from "react-icons/bs";
-import { FcLike } from "react-icons/fc";
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import Image from "next/image";
 
 import MainLayout from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const BlogPage = () => {
   const router = useRouter();
@@ -18,6 +20,15 @@ const BlogPage = () => {
     }
   );
   const authorImage = getPost.data?.author.image;
+  const likePost = api.post.likePost.useMutation({
+    onError() {
+      toast.error("Something went wrong. Please try again later");
+    },
+    onSuccess: () => {
+      toast.success("Post liked!");
+    },
+  });
+
   return (
     <MainLayout>
       <div className="flex h-full w-full flex-col items-center p-10">
@@ -57,12 +68,32 @@ const BlogPage = () => {
           </div>
           {getPost.isSuccess && (
             <div className="flex w-full">
-              <div className="flex gap-4 rounded-lg bg-white p-2">
-                <div className="cursor-pointer">
-                  <FcLike className="text-xl" />
+              <div className="flex items-center justify-center gap-4 rounded-lg bg-white p-2">
+                <div className="flex h-full cursor-pointer ">
+                  {!getPost.data?.likes ? (
+                    <FcLikePlaceholder
+                      onClick={() =>
+                        likePost.mutate({
+                          postId: getPost.data?.id!,
+                        })
+                      }
+                      className="text-3xl"
+                    />
+                  ) : (
+                    <FcLike
+                      onClick={() =>
+                        // likePost.mutate({
+                        //   postId: getPost.data?.id!,
+                        // })
+                        toast.success("You already liked the post")
+                      }
+                      className="text-3xl"
+                    />
+                  )}
+                  <span className="ml-2 mt-2 text-xs font-bold">{`${getPost.data?._count.likes} likes`}</span>
                 </div>
                 <div className="cursor-pointer">
-                  <BsChat className="text-xl" />
+                  <BsChat className="text-2xl" />
                 </div>
               </div>
             </div>

@@ -32,6 +32,7 @@ export const postRouter = createTRPCRouter({
         });
       }
     ),
+
   getPosts: publicProcedure.query(async ({ ctx: { prisma } }) => {
     const posts = await prisma.post.findMany({
       take: 15,
@@ -51,26 +52,59 @@ export const postRouter = createTRPCRouter({
     });
     return posts;
   }),
+
   getPost: publicProcedure
     .input(
       z.object({
         slug: z.string(),
       })
     )
-    .query(async ({ ctx: { prisma }, input: { slug } }) => {
+    .query(async ({ ctx: { prisma, session }, input: { slug } }) => {
       const post = await prisma.post.findUnique({
         where: {
           slug,
         },
-        include: {
+        select: {
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
+          id: true,
+          description: true,
+          title: true,
+          createdAt: true,
+          text: true,
           author: {
             select: {
               name: true,
               image: true,
             },
           },
+          likes: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : false,
         },
       });
       return post;
+    }),
+
+  likePost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+      await prisma.like.create({
+        data: {
+          userId: session.user.id,
+          postId,
+        },
+      });
     }),
 });
