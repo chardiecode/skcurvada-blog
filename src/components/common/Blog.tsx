@@ -1,31 +1,73 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 import Image from "next/image";
 import dayjs from "dayjs";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import { RouterOutputs, api } from "~/utils/api";
+import { BsBookmarkCheckFill, BsBookmarkDash } from "react-icons/bs";
 
-interface AuthorProps {
-  image?: string | null;
-  name: string | null;
-}
+// interface AuthorProps {
+//   image?: string | null;
+//   name: string | null;
+// }
 
-interface PostProps {
-  author: AuthorProps;
-  description: string;
-  title: string;
-  createdAt: Date;
-}
+// interface BookmarkProps {
+//   id: string;
+//   userId: string;
+//   postId: string;
+// }
 
-interface BlogProps {
-  post: PostProps;
-}
+// interface PostProps {
+//   id: string;
+//   author: AuthorProps;
+//   description: string;
+//   title: string;
+//   createdAt: Date;
+//   slug: string;
+//   bookmarks?: BookmarkProps[];
+// }
 
-const Blog: React.FC<BlogProps> = ({ post }) => {
+// interface BlogProps {
+//   post: PostProps;
+// }
+
+type BlogProps = RouterOutputs["post"]["getPosts"][number];
+
+const Blog: React.FC<BlogProps> = ({ ...post }) => {
+  const [isBookmarked, setIsBookmarked] = useState(
+    post.bookmarks && Boolean(post.bookmarks.length)
+  );
+
+  // const updateBookmarkState = useCallback(() => {
+  //   setIsBookmarked((prev) => !prev);
+  // }, []);
+
+  const bookmarkPost = api.post.bookmarkPost.useMutation({
+    onSuccess: () => {
+      setIsBookmarked((prev) => !prev);
+      toast.success("Post has been added to your bookmark list");
+    },
+    onError() {
+      toast.error("Something went wrong. Try again later");
+    },
+  });
+  const unBookmarkPost = api.post.unBookmarkPost.useMutation({
+    onSuccess: () => {
+      setIsBookmarked((prev) => !prev);
+      toast.success("Post has been unbookmarked");
+    },
+    onError() {
+      toast.error("Something went wrong. Try again later");
+    },
+  });
+  console.log(post);
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex">
         <div className="relative h-8 w-8 rounded-full bg-gray-500">
           <Image
-            src={post.author.image || ""}
+            src={post?.author?.image! || ""}
             alt="Profile image"
             fill
             className="rounded-full"
@@ -43,7 +85,10 @@ const Blog: React.FC<BlogProps> = ({ post }) => {
           </p>
         </div>
       </div>
-      <div className="group grid min-h-[6rem] w-full grid-cols-12 gap-3">
+      <Link
+        href={`/${post.slug}`}
+        className="group grid min-h-[6rem] w-full grid-cols-12 gap-3"
+      >
         <div className="col-span-8">
           <p className="text-2sm font-bold group-hover:underline">
             {post.title}
@@ -54,15 +99,35 @@ const Blog: React.FC<BlogProps> = ({ post }) => {
         <div className="col-span-4">
           <div className="h-full w-full transform rounded-xl bg-gray-300 transition duration-300 hover:scale-105 hover:shadow-xl"></div>
         </div>
-      </div>
+      </Link>
       <div className="relative flex w-full items-center space-x-4 border-b border-gray-300 pb-8">
-        <div className="text-xs">My topics</div>
-        <div className="flex items-center space-x-2">
+        <div className="flex w-full items-center space-x-2">
           {Array.from({ length: 4 }).map((_, i) => (
             <div className="rounded-2xl bg-gray-200 px-4 py-2 text-xs" key={i}>
               tag{i}
             </div>
           ))}
+        </div>
+        <div className="flex w-full items-center justify-end space-x-4 text-right">
+          {isBookmarked ? (
+            <BsBookmarkCheckFill
+              onClick={() =>
+                unBookmarkPost.mutate({
+                  postId: post?.id,
+                })
+              }
+              className="fill cursor-pointer text-xl text-red-500"
+            />
+          ) : (
+            <BsBookmarkDash
+              onClick={() =>
+                bookmarkPost.mutate({
+                  postId: post?.id,
+                })
+              }
+              className="cursor-pointer text-xl"
+            />
+          )}
         </div>
       </div>
     </div>

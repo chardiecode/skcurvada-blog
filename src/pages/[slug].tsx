@@ -1,3 +1,4 @@
+"use client";
 import { useCallback } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -27,10 +28,9 @@ const BlogPage = () => {
 
   const likePost = api.post.likePost.useMutation({
     onError() {
-      toast.error("Something went wrong. Please try again later");
+      toast.error("Please signin to like this post");
     },
     onSuccess: () => {
-      toast.success("Post liked!");
       invalidateCurrentPostPage();
     },
   });
@@ -45,6 +45,7 @@ const BlogPage = () => {
   });
 
   const authorImage = getPost.data?.author.image;
+  console.log(getPost);
 
   return (
     <MainLayout>
@@ -87,19 +88,19 @@ const BlogPage = () => {
             <div className="flex w-full">
               <div className="flex items-center justify-center rounded-lg bg-white">
                 <div className="mr-4 flex h-full cursor-pointer">
-                  {!getPost.data?.likes.length ? (
-                    <FcLikePlaceholder
+                  {getPost.data?.likes && getPost.data.likes.length ? (
+                    <FcLike
                       onClick={() =>
-                        likePost.mutate({
+                        dislikePost.mutate({
                           postId: getPost.data?.id!,
                         })
                       }
                       className="text-3xl"
                     />
                   ) : (
-                    <FcLike
+                    <FcLikePlaceholder
                       onClick={() =>
-                        dislikePost.mutate({
+                        likePost.mutate({
                           postId: getPost.data?.id!,
                         })
                       }

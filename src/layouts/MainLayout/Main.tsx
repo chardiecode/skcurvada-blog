@@ -58,11 +58,7 @@ const Main = () => {
         {/* TODO: Replace skeleton loader */}
         {getPosts.isLoading && <div>Loading..............</div>}
         {getPosts.isSuccess &&
-          getPosts.data?.map((post, i) => (
-            <Link key={i} href={`/${post.slug}`}>
-              <Blog post={post} />
-            </Link>
-          ))}
+          getPosts.data?.map((post, i) => <Blog key={i} {...post} />)}
       </div>
     </main>
   );

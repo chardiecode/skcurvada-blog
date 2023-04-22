@@ -33,7 +33,7 @@ export const postRouter = createTRPCRouter({
       }
     ),
 
-  getPosts: publicProcedure.query(async ({ ctx: { prisma } }) => {
+  getPosts: publicProcedure.query(async ({ ctx: { prisma, session } }) => {
     const posts = await prisma.post.findMany({
       take: 15,
       orderBy: [
@@ -41,13 +41,26 @@ export const postRouter = createTRPCRouter({
           createdAt: "desc",
         },
       ],
-      include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        createdAt: true,
+        slug: true,
         author: {
           select: {
+            id: true,
             name: true,
             image: true,
           },
         },
+        bookmarks: session?.user.id
+          ? {
+              where: {
+                userId: session?.user.id,
+              },
+            }
+          : false,
       },
     });
     return posts;
@@ -75,12 +88,7 @@ export const postRouter = createTRPCRouter({
           title: true,
           createdAt: true,
           text: true,
-          author: {
-            select: {
-              name: true,
-              image: true,
-            },
-          },
+          author: true,
           likes: session?.user?.id
             ? {
                 where: {
@@ -116,6 +124,37 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
       await prisma.like.delete({
+        where: {
+          userId_postId: {
+            postId,
+            userId: session.user.id,
+          },
+        },
+      });
+    }),
+
+  bookmarkPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+      await prisma.bookMark.create({
+        data: {
+          userId: session.user.id,
+          postId,
+        },
+      });
+    }),
+  unBookmarkPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+      await prisma.bookMark.delete({
         where: {
           userId_postId: {
             postId,
