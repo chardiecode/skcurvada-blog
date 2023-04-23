@@ -88,7 +88,7 @@ const BlogPage = () => {
             <div className="flex w-full">
               <div className="flex items-center justify-center rounded-lg bg-white">
                 <div className="mr-4 flex h-full cursor-pointer">
-                  {getPost.data?.likes && getPost.data.likes.length ? (
+                  {getPost.data?.likes?.length ? (
                     <FcLike
                       onClick={() =>
                         dislikePost.mutate({

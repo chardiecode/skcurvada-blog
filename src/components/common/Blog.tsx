@@ -36,7 +36,7 @@ type BlogProps = RouterOutputs["post"]["getPosts"][number];
 
 const Blog: React.FC<BlogProps> = ({ ...post }) => {
   const [isBookmarked, setIsBookmarked] = useState(
-    post.bookmarks && Boolean(post.bookmarks.length)
+    Boolean(post.bookmarks?.length)
   );
 
   // const updateBookmarkState = useCallback(() => {
