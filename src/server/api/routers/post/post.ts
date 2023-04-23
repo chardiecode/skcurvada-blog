@@ -163,4 +163,29 @@ export const postRouter = createTRPCRouter({
         },
       });
     }),
+
+  comment: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+        text: z.string().min(10),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { text, postId } }) => {
+      await prisma.comment.create({
+        data: {
+          text,
+          user: {
+            connect: {
+              id: session.user.id,
+            },
+          },
+          post: {
+            connect: {
+              id: postId,
+            },
+          },
+        },
+      });
+    }),
 });

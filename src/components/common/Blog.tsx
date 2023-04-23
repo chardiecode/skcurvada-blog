@@ -35,13 +35,10 @@ import { BsBookmarkCheckFill, BsBookmarkDash } from "react-icons/bs";
 type BlogProps = RouterOutputs["post"]["getPosts"][number];
 
 const Blog: React.FC<BlogProps> = ({ ...post }) => {
+  // Save bookmarks on state to avoid rerendering
   const [isBookmarked, setIsBookmarked] = useState(
     Boolean(post.bookmarks?.length)
   );
-
-  // const updateBookmarkState = useCallback(() => {
-  //   setIsBookmarked((prev) => !prev);
-  // }, []);
 
   const bookmarkPost = api.post.bookmarkPost.useMutation({
     onSuccess: () => {
