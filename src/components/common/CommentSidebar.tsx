@@ -6,6 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 type CommentSideBarProps = {
   showCommentSideBar: boolean;
@@ -24,6 +28,7 @@ const CommentSideBar = ({
     register,
     handleSubmit,
     formState: { isValid },
+    reset,
   } = useForm<CommentFormType>({
     resolver: zodResolver(
       z.object({
@@ -32,14 +37,26 @@ const CommentSideBar = ({
     ),
   });
 
+  const postRoute = api.useContext().post;
+
   const submitComment = api.post.comment.useMutation({
     onSuccess: () => {
       toast.success("You thoughts has been posted");
+      postRoute.getComments.invalidate({
+        postId,
+      });
+      reset();
     },
     onError: (error) => {
       toast.error("Something went wrong. " + error);
     },
   });
+
+  // Get comments
+  const getComments = api.post.getComments.useQuery({
+    postId,
+  });
+  console.log(getComments?.data?.length);
   return (
     <Transition.Root show={showCommentSideBar} as={Fragment}>
       <Dialog as="div" onClose={() => setShowCommentSideBar(false)}>
@@ -55,7 +72,9 @@ const CommentSideBar = ({
             <Dialog.Panel className="relative h-screen w-screen bg-white drop-shadow-2xl sm:w-[25rem]">
               <div className="flex h-full w-full flex-col overflow-auto px-5">
                 <div className="my-5 flex items-center justify-between ">
-                  <h2 className="text-lg font-medium">Responses(4)</h2>
+                  <h2 className="text-lg font-medium">
+                    {`Responses ${getComments?.data?.length}`}
+                  </h2>
                   <div className="text-lg">
                     <HiXMark
                       strokeWidth={1}
@@ -90,36 +109,37 @@ const CommentSideBar = ({
                     </button>
                   )}
                 </form>
-                <div className="flex flex-col items-center justify-center space-y-6">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <div
-                      className="space-y-2 border-b pb-4 last:border-none"
-                      key={i}
-                    >
-                      <div className="flex">
-                        <div className="relative h-8 w-8 rounded-full bg-gray-500"></div>
-                        <div className="ml-2">
-                          <p className="text-xs">
-                            <span className="font-semibold">Chardie Coder</span>{" "}
-                            &#x2022;{" "}
-                            <span className="font-bold text-gray-800">
-                              2 hours ago
-                            </span>
-                          </p>
-                          <p className="text-xs text-gray-600">
-                            Father, Founder, teacher and software developer
-                          </p>
+                {getComments.isSuccess && (
+                  <div className="flex flex-col items-center justify-center space-y-6">
+                    {getComments.data.map((comment, i) => (
+                      <div
+                        className="w-full space-y-2 border-b pb-4 last:border-none"
+                        key={i}
+                      >
+                        <div className="flex">
+                          <div className="relative h-8 w-8 rounded-full bg-gray-500"></div>
+                          <div className="ml-2">
+                            <p className="text-xs">
+                              <span className="font-semibold">
+                                {comment.user.name}
+                              </span>{" "}
+                              &#x2022;{" "}
+                              <span className="font-bold text-gray-800">
+                                {dayjs(comment.createdAt).fromNow()}
+                              </span>
+                            </p>
+                            <p className="text-xs text-gray-600">
+                              Father, Founder, teacher and software developer
+                            </p>
+                          </div>
+                        </div>
+                        <div className="py-1.5 text-sm text-gray-600">
+                          {comment.text}
                         </div>
                       </div>
-                      <div className="pb-2 text-sm text-gray-600">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Iste quo excepturi debitis voluptate blanditiis iure
-                        quasi aperiam sunt. Laudantium nam distinctio quidem
-                        iusto eveniet amet in dolore repellat modi at!
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </Dialog.Panel>
           </Transition.Child>

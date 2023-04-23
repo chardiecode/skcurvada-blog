@@ -26,7 +26,7 @@ const WriteFormModal = () => {
     resolver: zodResolver(writeFormSchema),
   });
 
-  // const postRoute = api.useContext().post;
+  const postRoute = api.useContext().post;
 
   const createPost = api.post.createPost.useMutation({
     onError() {
@@ -36,7 +36,7 @@ const WriteFormModal = () => {
       toast.success("Post created successfully");
       setIsWriteModalOpen(false);
       reset();
-      // postRoute.getPosts.invalidate(); // Refetch posts
+      postRoute.getPosts.invalidate(); // Refetch posts
     },
   });
 

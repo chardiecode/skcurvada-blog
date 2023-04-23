@@ -94,9 +94,9 @@ const BlogPage = () => {
             </div>
           </div>
           {getPost.isSuccess && (
-            <div className="flex w-full">
+            <div className="flex w-full py-2">
               <div className="flex items-center justify-center rounded-lg bg-white">
-                <div className="mr-4 flex h-full cursor-pointer">
+                <div className="mr-4 flex h-full cursor-pointer items-center">
                   {getPost.data?.likes?.length ? (
                     <FcLike
                       onClick={() =>
@@ -116,13 +116,14 @@ const BlogPage = () => {
                       className="text-3xl"
                     />
                   )}
-                  <span className="ml-2 mt-2 text-xs font-bold">{`${getPost.data?._count.likes} likes`}</span>
+                  <span className="ml-2 text-xs font-bold">{`${getPost.data?._count.likes} likes`}</span>
                 </div>
-                <div className="cursor-pointer">
-                  <BsChat
-                    className="text-2xl"
-                    onClick={() => setShowCommentSideBar(true)}
-                  />
+                <div
+                  className="mx-3 flex h-full cursor-pointer items-center"
+                  onClick={() => setShowCommentSideBar(true)}
+                >
+                  <BsChat className="text-2xl" />
+                  <span className="ml-2 text-xs font-bold">{`${getPost.data?._count.comments} comments`}</span>
                 </div>
               </div>
             </div>

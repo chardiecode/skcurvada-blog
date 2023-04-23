@@ -81,6 +81,7 @@ export const postRouter = createTRPCRouter({
           _count: {
             select: {
               likes: true,
+              comments: true,
             },
           },
           id: true,
@@ -187,5 +188,35 @@ export const postRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  getComments: publicProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .query(async ({ ctx: { prisma }, input: { postId } }) => {
+      const comments = await prisma.comment.findMany({
+        where: {
+          postId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          text: true,
+          createdAt: true,
+          user: {
+            select: {
+              name: true,
+              image: true,
+              id: true,
+            },
+          },
+        },
+      });
+      return comments;
     }),
 });
