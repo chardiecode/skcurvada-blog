@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useState } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -53,11 +51,13 @@ const BlogPage = () => {
 
   return (
     <MainLayout>
-      <CommentSideBar
-        showCommentSideBar={showCommentSideBar}
-        setShowCommentSideBar={setShowCommentSideBar}
-        postId={getPost.data?.id!}
-      />
+      {getPost?.isSuccess && (
+        <CommentSideBar
+          showCommentSideBar={showCommentSideBar}
+          setShowCommentSideBar={setShowCommentSideBar}
+          postId={getPost.data?.id!}
+        />
+      )}
       <div className="flex h-full w-full flex-col items-center p-10">
         <div className="w-full max-w-screen-md flex-col space-y-4">
           {getPost.isLoading && <div>Loading...</div>}

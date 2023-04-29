@@ -219,4 +219,38 @@ export const postRouter = createTRPCRouter({
       });
       return comments;
     }),
+
+  getReadingLists: protectedProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      const allBookmarks = prisma.bookMark.findMany({
+        where: {
+          userId: session.user.id,
+        },
+        take: 4,
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          post: {
+            select: {
+              title: true,
+              description: true,
+              id: true,
+              slug: true,
+              author: {
+                select: {
+                  name: true,
+                  image: true,
+                  id: true,
+                },
+              },
+              createdAt: true,
+            },
+          },
+        },
+      });
+      return allBookmarks;
+    }
+  ),
 });

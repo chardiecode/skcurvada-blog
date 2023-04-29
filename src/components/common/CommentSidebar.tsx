@@ -73,7 +73,7 @@ const CommentSideBar = ({
               <div className="flex h-full w-full flex-col overflow-auto px-5">
                 <div className="my-5 flex items-center justify-between ">
                   <h2 className="text-lg font-medium">
-                    {`Responses ${getComments?.data?.length}`}
+                    {`Responses(${getComments?.data?.length})`}
                   </h2>
                   <div className="text-lg">
                     <HiXMark
