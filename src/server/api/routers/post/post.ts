@@ -52,6 +52,7 @@ export const postRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            username: true,
           },
         },
         bookmarks: session?.user.id

@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import Link from "next/link";
+import Avatar from "~/components/common/user/Avatar";
 import { api } from "~/utils/api";
 
 const Aside = () => {
@@ -52,7 +53,12 @@ const Aside = () => {
                     {bookmark.post.description}
                   </div>
                   <div className="flex w-full items-center space-x-1">
-                    <div className="h-8 w-8 rounded-full bg-gray-300"></div>
+                    <div className="relative h-8 w-8 rounded-full bg-gray-500">
+                      <Avatar
+                        src={bookmark.post.author?.image! || ""}
+                        alt="Profile image"
+                      />
+                    </div>
                     <div className="text-xs">
                       <span className="font-semibold">
                         {bookmark.post.author.name}

@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import { RouterOutputs, api } from "~/utils/api";
 import { BsBookmarkCheckFill, BsBookmarkDash } from "react-icons/bs";
 
+import Avatar from "./user/Avatar";
+
 // interface AuthorProps {
 //   image?: string | null;
 //   name: string | null;
@@ -63,16 +65,17 @@ const Blog: React.FC<BlogProps> = ({ ...post }) => {
     <div className="flex flex-col space-y-6">
       <div className="flex">
         <div className="relative h-8 w-8 rounded-full bg-gray-500">
-          <Image
-            src={post?.author?.image! || ""}
-            alt="Profile image"
-            fill
-            className="rounded-full"
-          />
+          <Avatar src={post?.author?.image! || ""} alt="Profile image" />
         </div>
         <div className="ml-2">
           <p className="text-xs">
-            <span className="font-semibold">{post.author.name}</span> &#x2022;{" "}
+            <Link
+              href={`/user/${post.author.username}`}
+              className="cursor-pointer font-semibold hover:underline"
+            >
+              {post.author.name}
+            </Link>{" "}
+            &#x2022;{" "}
             <span className="text-gray-500">
               {dayjs(post.createdAt).format("MMM D, YYYY h:mm A")}
             </span>
@@ -87,10 +90,12 @@ const Blog: React.FC<BlogProps> = ({ ...post }) => {
         className="group grid min-h-[6rem] w-full grid-cols-12 gap-3"
       >
         <div className="col-span-8">
-          <p className="text-2sm font-bold group-hover:underline">
+          <p className="text-2sm line-clamp-2 font-bold group-hover:underline">
             {post.title}
           </p>
-          <p className="pt-3 text-xs text-gray-600">{post.description}</p>
+          <p className="line-clamp-3 pt-3 text-xs text-gray-600">
+            {post.description}
+          </p>
         </div>
         {/* Image */}
         <div className="col-span-4">
