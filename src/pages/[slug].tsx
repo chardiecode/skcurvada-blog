@@ -9,6 +9,7 @@ import MainLayout from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
 import CommentSideBar from "~/components/common/CommentSidebar";
+import ClientDate from "~/components/common/ClientDate";
 
 const BlogPage = () => {
   const [showCommentSideBar, setShowCommentSideBar] = useState(false);
@@ -85,7 +86,7 @@ const BlogPage = () => {
                 </span>{" "}
                 &#x2022;{" "}
                 <span className="text-gray-500">
-                  {dayjs(getPost.data?.createdAt).format("MMM D, YYYY h:mm A")}
+                  <ClientDate localizeDate={getPost.data?.createdAt} />
                 </span>
               </p>
               <p className="text-xs text-gray-500">

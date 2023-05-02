@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Image from "next/image";
 import dayjs from "dayjs";
@@ -8,6 +8,7 @@ import { RouterOutputs, api } from "~/utils/api";
 import { BsBookmarkCheckFill, BsBookmarkDash } from "react-icons/bs";
 
 import Avatar from "./user/Avatar";
+import ClientDate from "./ClientDate";
 
 // interface AuthorProps {
 //   image?: string | null;
@@ -77,7 +78,7 @@ const Blog: React.FC<BlogProps> = ({ ...post }) => {
             </Link>{" "}
             &#x2022;{" "}
             <span className="text-gray-500">
-              {dayjs(post.createdAt).format("MMM D, YYYY h:mm A")}
+              <ClientDate localizeDate={post.createdAt ?? null} />
             </span>
           </p>
           <p className="text-xs text-gray-500">

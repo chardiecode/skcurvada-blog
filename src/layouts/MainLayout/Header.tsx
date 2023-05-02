@@ -12,7 +12,6 @@ const Header = () => {
   const { status } = useSession();
 
   const { setIsWriteModalOpen, isWriteModalOpen } = useContext(GlobalContext);
-  console.log(isWriteModalOpen);
   return (
     <header className="border-gray-380 flex h-16 w-full flex-row items-center justify-around border-b bg-white py-8">
       <div>

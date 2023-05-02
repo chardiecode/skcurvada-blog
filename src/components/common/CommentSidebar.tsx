@@ -8,6 +8,7 @@ import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import ClientDate from "./ClientDate";
 
 dayjs.extend(relativeTime);
 
@@ -125,7 +126,7 @@ const CommentSideBar = ({
                               </span>{" "}
                               &#x2022;{" "}
                               <span className="font-bold text-gray-800">
-                                {dayjs(comment.createdAt).fromNow()}
+                                <ClientDate localizeDate={comment.createdAt} />
                               </span>
                             </p>
                             <p className="text-xs text-gray-600">

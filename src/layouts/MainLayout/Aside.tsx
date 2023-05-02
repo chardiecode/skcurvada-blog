@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import Link from "next/link";
+import ClientDate from "~/components/common/ClientDate";
 import Avatar from "~/components/common/user/Avatar";
 import { api } from "~/utils/api";
 
@@ -65,9 +66,7 @@ const Aside = () => {
                       </span>{" "}
                       &#x2022;{" "}
                       <span className="text-gray-500">
-                        {dayjs(bookmark.post.createdAt).format(
-                          "MMM D, YYYY h:mm A"
-                        )}
+                        <ClientDate localizeDate={bookmark.post.createdAt} />
                       </span>
                     </div>
                   </div>

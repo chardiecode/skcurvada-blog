@@ -35,7 +35,7 @@ export const postRouter = createTRPCRouter({
 
   getPosts: publicProcedure.query(async ({ ctx: { prisma, session } }) => {
     const posts = await prisma.post.findMany({
-      take: 15,
+      take: 5,
       orderBy: [
         {
           createdAt: "desc",
@@ -170,7 +170,7 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         postId: z.string(),
-        text: z.string().min(10),
+        text: z.string().min(3),
       })
     )
     .mutation(async ({ ctx: { prisma, session }, input: { text, postId } }) => {
