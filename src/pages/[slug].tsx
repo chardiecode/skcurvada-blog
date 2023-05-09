@@ -80,15 +80,14 @@ const BlogPage = () => {
               )}
             </div>
             <div className="ml-2">
-              <p className="text-xs">
-                <span className="font-semibold">
+              <div className="text-xs">
+                <div className="font-semibold">
                   {getPost.data?.author.name}
-                </span>{" "}
-                &#x2022;{" "}
-                <span className="text-gray-500">
+                </div>
+                <div className="text-gray-500">
                   <ClientDate localizeDate={getPost.data?.createdAt} />
-                </span>
-              </p>
+                </div>
+              </div>
               <p className="text-xs text-gray-500">
                 Father, Founder, teacher and software developer
               </p>

@@ -69,7 +69,7 @@ const Blog: React.FC<BlogProps> = ({ ...post }) => {
           <Avatar src={post?.author?.image! || ""} alt="Profile image" />
         </div>
         <div className="ml-2">
-          <p className="text-xs">
+          <div className="text-xs">
             <Link
               href={`/user/${post.author.username}`}
               className="cursor-pointer font-semibold hover:underline"
@@ -80,7 +80,7 @@ const Blog: React.FC<BlogProps> = ({ ...post }) => {
             <span className="text-gray-500">
               <ClientDate localizeDate={post.createdAt ?? null} />
             </span>
-          </p>
+          </div>
           <p className="text-xs text-gray-500">
             Father, Founder, teacher and software developer
           </p>

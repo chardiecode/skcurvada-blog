@@ -61,13 +61,13 @@ const Aside = () => {
                       />
                     </div>
                     <div className="text-xs">
-                      <span className="font-semibold">
+                      <div className="font-semibold">
                         {bookmark.post.author.name}
-                      </span>{" "}
+                      </div>{" "}
                       &#x2022;{" "}
-                      <span className="text-gray-500">
+                      <div className="text-gray-500">
                         <ClientDate localizeDate={bookmark.post.createdAt} />
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>

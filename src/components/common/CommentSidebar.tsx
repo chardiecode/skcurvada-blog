@@ -120,15 +120,15 @@ const CommentSideBar = ({
                         <div className="flex">
                           <div className="relative h-8 w-8 rounded-full bg-gray-500"></div>
                           <div className="ml-2">
-                            <p className="text-xs">
-                              <span className="font-semibold">
+                            <div className="text-xs">
+                              <div className="font-semibold">
                                 {comment.user.name}
-                              </span>{" "}
+                              </div>{" "}
                               &#x2022;{" "}
-                              <span className="font-bold text-gray-800">
+                              <div className="font-bold text-gray-800">
                                 <ClientDate localizeDate={comment.createdAt} />
-                              </span>
-                            </p>
+                              </div>
+                            </div>
                             <p className="text-xs text-gray-600">
                               Father, Founder, teacher and software developer
                             </p>
