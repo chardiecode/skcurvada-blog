@@ -134,7 +134,7 @@ const CommentSideBar = ({
                             </p>
                           </div>
                         </div>
-                        <div className="py-1.5 text-sm text-gray-600">
+                        <div className="py-1.5 text-sm text-gray-800">
                           {comment.text}
                         </div>
                       </div>
