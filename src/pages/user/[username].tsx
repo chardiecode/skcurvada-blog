@@ -9,14 +9,6 @@ import { toast } from "react-hot-toast";
 import Blog from "~/components/common/Blog";
 import { useSession } from "next-auth/react";
 
-import { createClient } from "@supabase/supabase-js";
-import { env } from "~/env.mjs";
-
-const supabase = createClient(
-  env.NEXT_PUBLIC_SUPABASE_PUBLIC_URL,
-  env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY
-);
-
 function usernameQuery(router: NextRouter) {
   return {
     username: router.query.username as string,
@@ -43,14 +35,43 @@ const UserProfilePage = () => {
     usernameEnableQuery(router) // Only fetch to server if router.query.username is present
   );
 
-  // const [objectImage, setObjectImage] = useState("");
+  const [objectImage, setObjectImage] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+
+  const uploadAvatar = api.user.uploadAvatar.useMutation();
+  const username = userProfile.data?.username;
+
+  const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      if (file.size > 1.5 * 1000000) {
+        // Accept max 1.5mb
+        return toast.error("Image size should not be more than 1MB");
+      }
+      setObjectImage(URL.createObjectURL(file));
+
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onloadend = () => {
+        if (fileReader.result && userProfile.data?.username) {
+          console.warn(fileReader.result);
+          uploadAvatar.mutate({
+            imageAsDataUrl: fileReader.result as string,
+            username: userProfile.data?.username,
+          });
+        }
+      };
+    }
+  };
+
   const isCurrentUser = Boolean(
     currentUser?.data?.user.id === userProfile.data?.id
   );
   return (
     <MainLayout>
       <div className="flex h-full w-full justify-center">
-        <div className="my-10 flex h-full w-full flex-col lg:max-w-screen-md xl:max-w-screen-xl">
+        <div className="my-10 flex h-full w-full max-w-screen-md flex-col">
           <div className="flex w-full flex-col rounded-2xl bg-white shadow-lg">
             <div className="relative h-44 w-full rounded-t-2xl bg-gradient-to-r from-red-500 to-blue-500">
               <div className="absolute -bottom-10 left-10">
@@ -68,13 +89,20 @@ const UserProfilePage = () => {
                         name="avatarFile"
                         id="avatarFile"
                         accept="image/*"
-                        // onChange={}
+                        onChange={handleChangeImage}
+                        multiple={false}
                       />
                     </label>
                   )}
-                  {userProfile.data?.image ? (
+                  {!objectImage && userProfile.data?.image ? (
                     <Avatar
                       src={userProfile.data?.image}
+                      alt={userProfile.data?.name ?? ""}
+                    />
+                  ) : null}
+                  {objectImage ? (
+                    <Avatar
+                      src={objectImage}
                       alt={userProfile.data?.name ?? ""}
                     />
                   ) : null}
@@ -83,9 +111,7 @@ const UserProfilePage = () => {
             </div>
             <div className="ml-12 mt-10 flex-col rounded-b-2xl py-5">
               <div className="text-gray-900">{userProfile.data?.name}</div>
-              <div className="text-sm text-gray-500">
-                @{userProfile.data?.username}
-              </div>
+              <div className="text-sm text-gray-500">@{username}</div>
               <div className="text-sm text-gray-500">
                 {userProfile.data?._count?.posts ?? 0} posts
               </div>
@@ -109,8 +135,8 @@ const UserProfilePage = () => {
           <div className="my-10 w-full">
             {userPosts.isSuccess &&
               userPosts.data?.posts.map((post, i) => (
-                <div className="py-5">
-                  <Blog key={i} {...post} />
+                <div className="py-5" key={i}>
+                  <Blog {...post} />
                 </div>
               ))}
           </div>
