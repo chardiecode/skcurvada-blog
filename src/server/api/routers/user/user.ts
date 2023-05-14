@@ -95,7 +95,7 @@ export const userRouter = createTRPCRouter({
         .from("images")
         .upload(`avatars/${input.username}.png`, decode(imageBase64Str), {
           contentType: "image/png",
-          // cacheControl: "3600",
+          cacheControl: "3600",
           upsert: true,
         });
       console.log(data, error);
@@ -107,7 +107,14 @@ export const userRouter = createTRPCRouter({
       }
       const {
         data: { publicUrl },
-      } = supabase.storage.from("public").getPublicUrl(data?.path);
-      console.log({ publicUrl });
+      } = supabase.storage.from("images").getPublicUrl(data?.path);
+      await prisma.user.update({
+        data: {
+          image: publicUrl,
+        },
+        where: {
+          id: session.user.id,
+        },
+      });
     }),
 });

@@ -38,7 +38,16 @@ const UserProfilePage = () => {
   const [objectImage, setObjectImage] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const uploadAvatar = api.user.uploadAvatar.useMutation();
+  const userRoute = api.useContext().user;
+
+  const uploadAvatar = api.user.uploadAvatar.useMutation({
+    onSuccess: () => {
+      if (userProfile.data?.username) {
+        userRoute.getUserProfile.invalidate(usernameQuery(router));
+        toast.success("Avatar updated");
+      }
+    },
+  });
   const username = userProfile.data?.username;
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
