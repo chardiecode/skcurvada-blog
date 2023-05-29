@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GlobalContext } from "~/contexts/GlobalContextProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 
-import WriteModal from "../common/WriteModal";
+import Modal from "../common/WriteModal";
 import { writeFormSchema } from "~/validation/formValidation";
 import { api } from "~/utils/api";
+import TagsAutocompletion from "~/components/common/TagsAutocompletion";
 
 type WriteFormType = {
   title: string;
@@ -16,6 +17,7 @@ type WriteFormType = {
 
 const WriteFormModal = () => {
   const { isWriteModalOpen, setIsWriteModalOpen } = useContext(GlobalContext);
+  const [tagCreateModal, setTagCreateModal] = useState(false);
 
   const {
     register,
@@ -44,13 +46,48 @@ const WriteFormModal = () => {
     createPost.mutate(data);
   };
 
+  const createTag = api.tag.createTag.useMutation({
+    onError() {
+      toast.error("Something went wrong. Please try again later");
+    },
+    onSuccess() {
+      toast.success("Tag created successfully");
+    },
+  });
+
   return (
     <>
-      <WriteModal
+      <Modal
+        isOpen={tagCreateModal}
+        onClose={() => setTagCreateModal(false)}
+        title="Create tag"
+      >
+        <div>Create tag now</div>
+        <div className="flex w-full justify-end">
+          <a
+            onClick={() => setTagCreateModal(false)}
+            className="mx-1.5 cursor-pointer space-x-3 rounded border border-gray-200 bg-gray-200 px-4 py-1 text-sm transition hover:border-gray-900 hover:text-gray-900"
+          >
+            Cancel
+          </a>
+        </div>
+      </Modal>
+      <Modal
         isOpen={isWriteModalOpen}
         onClose={() => setIsWriteModalOpen(false)}
         title="Create your blog"
       >
+        <div className="mb-4 flex w-full">
+          <div className="z-10  w-4/5">
+            <TagsAutocompletion />
+          </div>
+          <button
+            onClick={() => setTagCreateModal(true)}
+            className="mx-1.5 w-1/5 cursor-pointer space-x-3 rounded border border-gray-200 bg-gray-200 px-4 text-xs transition hover:border-gray-900 hover:text-gray-900"
+          >
+            Create tag
+          </button>
+        </div>
         <form
           onSubmit={handleSubmit(onsubmit)}
           className="flex flex-col items-center justify-center space-y-4"
@@ -108,7 +145,7 @@ const WriteFormModal = () => {
             </button>
           </div>
         </form>
-      </WriteModal>
+      </Modal>
     </>
   );
 };

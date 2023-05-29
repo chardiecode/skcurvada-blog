@@ -95,7 +95,7 @@ export const userRouter = createTRPCRouter({
         .from("images")
         .upload(`avatars/${input.username}.png`, decode(imageBase64Str), {
           contentType: "image/png",
-          cacheControl: "3600",
+          // cacheControl: "3600",
           upsert: true,
         });
       console.log(data, error);
