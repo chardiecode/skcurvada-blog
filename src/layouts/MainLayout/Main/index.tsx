@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CiSearch } from "react-icons/ci";
 import { HiChevronDown } from "react-icons/hi";
 
-import Blog from "~/components/common/Blog";
+import Blog from "~/components/Blog";
 import { api } from "~/utils/api";
 
 const Main = () => {

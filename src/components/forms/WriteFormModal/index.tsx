@@ -4,10 +4,10 @@ import { GlobalContext } from "~/contexts/GlobalContextProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 
-import Modal from "../common/WriteModal";
+import Modal from "~/components/WriteModal";
 import { writeFormSchema, createTagSchema } from "~/validation/formValidation";
 import { api } from "~/utils/api";
-import TagsAutocompletion from "~/components/common/TagsAutocompletion";
+import TagsAutocompletion from "~/components/TagsAutocompletion";
 
 type WriteFormType = {
   title: string;

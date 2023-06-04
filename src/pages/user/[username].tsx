@@ -1,12 +1,12 @@
 import { NextRouter, useRouter } from "next/router";
 import React, { useState } from "react";
-import Avatar from "~/components/common/user/Avatar";
+import Avatar from "~/components/common/Avatar";
 import MainLayout from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
 import { BiEdit } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 import { toast } from "react-hot-toast";
-import Blog from "~/components/common/Blog";
+import Blog from "~/components/Blog";
 import { useSession } from "next-auth/react";
 
 function usernameQuery(router: NextRouter) {

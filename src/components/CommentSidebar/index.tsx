@@ -8,7 +8,7 @@ import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import ClientDate from "./ClientDate";
+import ClientDate from "~/components/common/ClientDate";
 
 dayjs.extend(relativeTime);
 
