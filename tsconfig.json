@@ -28,7 +28,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "src/components/common/WriteModal"
-, "src/server/api/routers/tag"  ],
+    "src/server/api/routers/tag"
+  ],
   "exclude": ["node_modules"]
 }

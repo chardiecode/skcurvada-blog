@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import Image from "next/image";
-import dayjs from "dayjs";
+// import Image from "next/image";
+// import dayjs from "dayjs";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { RouterOutputs, api } from "~/utils/api";
 import { BsBookmarkCheckFill, BsBookmarkDash } from "react-icons/bs";
 
-import Avatar from "./user/Avatar";
-import ClientDate from "./ClientDate";
+import Avatar from "~/components/common/Avatar";
+import ClientDate from "~/components/common/ClientDate";
 
 // interface AuthorProps {
 //   image?: string | null;

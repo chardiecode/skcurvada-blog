@@ -8,7 +8,7 @@ import Image from "next/image";
 import MainLayout from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
-import CommentSideBar from "~/components/common/CommentSidebar";
+import CommentSideBar from "~/components/CommentSidebar";
 import ClientDate from "~/components/common/ClientDate";
 
 const BlogPage = () => {
@@ -81,9 +81,7 @@ const BlogPage = () => {
             </div>
             <div className="ml-2">
               <div className="text-xs">
-                <div className="font-semibold">
-                  {getPost.data?.author.name}
-                </div>
+                <div className="font-semibold">{getPost.data?.author.name}</div>
                 <div className="text-gray-500">
                   <ClientDate localizeDate={getPost.data?.createdAt} />
                 </div>

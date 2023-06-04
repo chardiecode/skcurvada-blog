@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import Link from "next/link";
 import ClientDate from "~/components/common/ClientDate";
-import Avatar from "~/components/common/user/Avatar";
+import Avatar from "~/components/common/Avatar";
 import { api } from "~/utils/api";
 
 const Aside = () => {

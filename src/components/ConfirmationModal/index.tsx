@@ -3,10 +3,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 type DialogProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  description?: string;
+  isOpen: boolean,
+  onClose: () => void,
+  title?: string,
+  description?: string,
 };
 
 const ConfirmationModal = ({
