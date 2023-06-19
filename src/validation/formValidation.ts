@@ -7,6 +7,6 @@ export const writeFormSchema = z.object({
 });
 
 export const createTagSchema = z.object({
-  name: z.string().min(5),
-  description: z.string().min(60),
+  name: z.string().min(3),
+  description: z.string().min(10),
 });
