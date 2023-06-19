@@ -1,0 +1,13 @@
+-- AlterTable
+ALTER TABLE "Comment" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "parentId" TEXT;
+
+-- AlterTable
+ALTER TABLE "Post" ALTER COLUMN "html" DROP NOT NULL,
+ALTER COLUMN "text" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "username" DROP NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Comment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
