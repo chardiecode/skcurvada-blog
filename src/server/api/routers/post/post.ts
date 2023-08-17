@@ -10,11 +10,23 @@ import { writeFormSchema } from "~/validation/formValidation";
 
 export const postRouter = createTRPCRouter({
   createPost: protectedProcedure
-    .input(writeFormSchema)
+    .input(
+      writeFormSchema.and(
+        z.object({
+          tagIds: z
+            .array(
+              z.object({
+                id: z.string(),
+              })
+            )
+            .optional(),
+        })
+      )
+    )
     .mutation(
       async ({
         ctx: { prisma, session },
-        input: { title, description, text },
+        input: { title, description, text, tagIds },
       }) => {
         // Check slug exists
         await prisma.post.create({
@@ -27,6 +39,9 @@ export const postRouter = createTRPCRouter({
               connect: {
                 id: session.user.id,
               },
+            },
+            tags: {
+              connect: tagIds,
             },
           },
         });
@@ -62,6 +77,13 @@ export const postRouter = createTRPCRouter({
               },
             }
           : false,
+        tags: {
+          select: {
+            name: true,
+            id: true,
+            slug: true,
+          },
+        },
       },
     });
     return posts;

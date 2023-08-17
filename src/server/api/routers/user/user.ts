@@ -98,7 +98,6 @@ export const userRouter = createTRPCRouter({
           // cacheControl: "3600",
           upsert: true,
         });
-      console.log(data, error);
       if (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

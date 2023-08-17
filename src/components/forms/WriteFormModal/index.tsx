@@ -10,6 +10,8 @@ import { api } from "~/utils/api";
 import TagsAutocompletion from "~/components/TagsAutocompletion";
 import TagForm from "~/components/forms/TagForm";
 
+export type TAG = { id: string; name: string };
+
 type WriteFormType = {
   title: string;
   description: string;
@@ -21,6 +23,7 @@ type WriteFormType = {
 const WriteFormModal = () => {
   const { isWriteModalOpen, setIsWriteModalOpen } = useContext(GlobalContext);
   const [tagCreateModal, setTagCreateModal] = useState(false);
+  const [selectedTagId, setSelectedTagId] = useState("");
 
   const {
     register,
@@ -45,32 +48,47 @@ const WriteFormModal = () => {
     },
   });
 
+  // const [selectedTags, setSelectedTags] = useState([]);
+
+  const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
+
   const onsubmit = (data: WriteFormType) => {
-    createPost.mutate(data);
+    createPost.mutate(
+      selectedTags.length > 0 ? { ...data, tagIds: selectedTags } : data
+    );
   };
+  const getTags = api.tag.getTags.useQuery();
 
   return (
     <>
-      <TagForm
-        isOpen={tagCreateModal}
-        onClose={() => setTagCreateModal(false)}
-      />
       <Modal
         isOpen={isWriteModalOpen}
         onClose={() => setIsWriteModalOpen(false)}
         title="Create your blog"
       >
-        <div className="mb-4 flex w-full">
-          <div className="z-10  w-4/5">
-            <TagsAutocompletion />
-          </div>
-          <button
-            onClick={() => setTagCreateModal(true)}
-            className="mx-1.5 w-1/5 cursor-pointer space-x-3 rounded border border-gray-200 bg-gray-200 px-4 text-xs transition hover:border-gray-900 hover:text-gray-900"
-          >
-            Create tag
-          </button>
-        </div>
+        {getTags.isSuccess && (
+          <>
+            <TagForm
+              isOpen={tagCreateModal}
+              onClose={() => setTagCreateModal(false)}
+            />
+            <div className="mb-4 flex w-full">
+              <div className="z-10  w-4/5">
+                <TagsAutocompletion
+                  tags={getTags.data}
+                  selectedTags={selectedTags}
+                  setSelectedTags={setSelectedTags}
+                />
+              </div>
+              <button
+                onClick={() => setTagCreateModal(true)}
+                className="mx-1.5 w-1/5 cursor-pointer space-x-3 rounded border border-gray-200 bg-gray-200 px-4 text-xs transition hover:border-gray-900 hover:text-gray-900"
+              >
+                Create tag
+              </button>
+            </div>
+          </>
+        )}
         <form
           onSubmit={handleSubmit(onsubmit)}
           className="flex flex-col items-center justify-center space-y-4"

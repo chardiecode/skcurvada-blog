@@ -105,9 +105,15 @@ const Blog: React.FC<BlogProps> = ({ ...post }) => {
       </Link>
       <div className="relative flex w-full items-center space-x-4 border-b border-gray-300 pb-8">
         <div className="flex w-full items-center space-x-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div className="rounded-2xl bg-gray-200 px-4 py-2 text-xs" key={i}>
-              tag{i}
+          {post.tags?.map((tag) => (
+            <div
+              className="rounded-2xl bg-gray-200 px-4 py-2 text-xs"
+              key={tag.id}
+              onClick={() => {
+                // redirect to tag page where all the post are related to tag
+              }}
+            >
+              {tag.name}
             </div>
           ))}
         </div>

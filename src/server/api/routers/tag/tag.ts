@@ -7,7 +7,7 @@ export const tagRouter = createTRPCRouter({
   createTag: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().min(3),
         description: z.string(),
       })
     )
@@ -30,4 +30,7 @@ export const tagRouter = createTRPCRouter({
         },
       });
     }),
+  getTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
+    return await prisma.tag.findMany();
+  }),
 });

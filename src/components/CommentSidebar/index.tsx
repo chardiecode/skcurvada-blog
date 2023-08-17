@@ -57,7 +57,6 @@ const CommentSideBar = ({
   const getComments = api.post.getComments.useQuery({
     postId,
   });
-  console.log(getComments?.data?.length);
   return (
     <Transition.Root show={showCommentSideBar} as={Fragment}>
       <Dialog as="div" onClose={() => setShowCommentSideBar(false)}>

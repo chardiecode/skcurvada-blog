@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { writeFormSchema } from "~/validation/formValidation";
+import { createTagSchema } from "~/validation/formValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/utils/api";
 
@@ -24,14 +24,16 @@ const App: React.FC<AppProps> = ({ isOpen, onClose }) => {
     formState: { errors },
     reset,
   } = useForm<WriteTagType>({
-    resolver: zodResolver(writeFormSchema),
+    resolver: zodResolver(createTagSchema),
   });
+  const tagRoute = api.useContext().tag;
   const createTag = api.tag.createTag.useMutation({
     onError() {
       toast.error("Something went wrong. Please try again later");
     },
     onSuccess() {
       toast.success("Tag created successfully");
+      tagRoute.invalidate();
       reset();
     },
   });
@@ -66,12 +68,20 @@ const App: React.FC<AppProps> = ({ isOpen, onClose }) => {
             placeholder="Description"
             className="h-full w-full rounded-md border border-gray-300 p-3 text-sm outline-none focus:border-gray-600"
           />
-          <button
-            type="submit"
-            className="mx-1.5 space-x-3 rounded border border-gray-200 bg-red-600 px-4 py-1 text-sm text-white transition hover:border-gray-900 hover:text-gray-900"
-          >
-            Create Tag
-          </button>
+          <div className="flex w-full justify-end">
+            <a
+              onClick={onClose}
+              className="mx-1.5 cursor-pointer space-x-3 rounded border border-gray-200 bg-gray-200 px-4 py-1 text-sm transition hover:border-gray-900 hover:text-gray-900"
+            >
+              Cancel
+            </a>
+            <button
+              type="submit"
+              className="mx-1.5 space-x-3 rounded border border-gray-200 bg-red-600 px-4 py-1 text-sm text-white transition hover:border-gray-900 hover:text-gray-900"
+            >
+              Create Tag
+            </button>
+          </div>
         </form>
       </Modal>
     </>

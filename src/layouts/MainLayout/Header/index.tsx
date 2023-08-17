@@ -4,8 +4,10 @@ import { BsBell } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { HiLogout } from "react-icons/hi";
-// import ResuableDialog from "~/components/common/ConfirmationModal";
+
 import { GlobalContext } from "~/contexts/GlobalContextProvider";
+import Image from "next/image";
+// import ResuableDialog from "~/components/common/ConfirmationModal";
 import Link from "next/link";
 
 const Header = () => {
@@ -17,8 +19,15 @@ const Header = () => {
       <div>
         <IoReorderThreeOutline className="text-3xl text-gray-600" />
       </div>
-      <Link className="text-xl font-extrabold" href={"/"}>
-        Sk Curvada
+      <Link className="flex" href={"/"}>
+        <Image
+          src={"/images/logo3.png"}
+          alt={"Logo"}
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "auto", height: "40px" }}
+        />
       </Link>
       {status === "authenticated" ? (
         <div className="flex items-center space-x-4">

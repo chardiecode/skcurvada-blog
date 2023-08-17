@@ -62,24 +62,24 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER || "https://localhost:3000",
-        port: 587,
-        auth: {
-          user: "apikey",
-          pass: process.env.EMAIL_PASSWORD || "",
-        },
-      },
-      from: process.env.EMAIL_FROM || "default@default.com",
-      ...(process.env.NODE_ENV !== "production"
-        ? {
-            sendVerificationRequest({ url }) {
-              console.log("LOGIN LINK", url);
-            },
-          }
-        : {}),
-    }),
+    // EmailProvider({
+    //   server: {
+    //     host: process.env.EMAIL_SERVER || "https://localhost:3000",
+    //     port: 587,
+    //     auth: {
+    //       user: "apikey",
+    //       pass: process.env.EMAIL_PASSWORD || "",
+    //     },
+    //   },
+    //   from: process.env.EMAIL_FROM || "default@default.com",
+    //   ...(process.env.NODE_ENV !== "production"
+    //     ? {
+    //         sendVerificationRequest({ url }) {
+    //           console.log("LOGIN LINK", url);
+    //         },
+    //       }
+    //     : {}),
+    // }),
     /**
      * ...add more providers here.
      *

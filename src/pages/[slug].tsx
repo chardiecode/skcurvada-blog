@@ -48,7 +48,6 @@ const BlogPage = () => {
   });
 
   const authorImage = getPost.data?.author.image;
-  console.log(getPost);
 
   return (
     <MainLayout>
